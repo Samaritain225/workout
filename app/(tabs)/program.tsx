@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWorkoutStore } from '../../store/useWorkoutStore';
 import { WeekBanner } from '../../components/WeekBanner';
-import { WEEKS, GOLDEN_RULES, UPGRADES } from '../../constants/program';
+import { WEEKS, GOLDEN_RULES, UPGRADES, getProgramForEquipment } from '../../constants/program';
 import { SessionType } from '../../types';
 import { useTheme } from '../../hooks/useTheme';
 import { t } from '../../constants/translations';
@@ -17,7 +17,7 @@ import { COLORS } from '@/constants/theme';
 import { router } from 'expo-router';
 
 export default function ProgramScreen() {
-  const { getCurrentWeekIndex, getRepsForExercise, language } = useWorkoutStore();
+  const { getCurrentWeekIndex, getRepsForExercise, language, userProfile } = useWorkoutStore();
   const { theme, isDark } = useTheme();
   const styles = createStyles(theme);
   const currentWeekIndex = getCurrentWeekIndex();
@@ -25,7 +25,7 @@ export default function ProgramScreen() {
   const [selectedWeekIndex, setSelectedWeekIndex] = useState(currentWeekIndex);
   const [activeSession, setActiveSession] = useState<SessionType>('morning');
 
-  const week = WEEKS[selectedWeekIndex];
+  const week = getProgramForEquipment([WEEKS[selectedWeekIndex]], userProfile.equipment || ['none'])[0];
   const exercises = week.isLongTerm ? [] : week.session[activeSession];
   const isCurrentWeek = selectedWeekIndex === currentWeekIndex;
 

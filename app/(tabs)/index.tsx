@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import { useWorkoutStore } from '../../store/useWorkoutStore';
 import { ExerciseRow } from '../../components/ExerciseRow';
 import { WeekBanner } from '../../components/WeekBanner';
+import { getProgramForEquipment } from '../../constants/program';
 import { ExercisePicker } from '../../components/ExercisePicker';
 import { EXERCISE_LIBRARY } from '../../constants/exercises';
 import { SessionType, ExerciseTag, Exercise } from '../../types';
@@ -35,6 +36,7 @@ export default function TodayScreen() {
     customExerciseMap,
     setCustomExercise,
     language,
+    userProfile,
   } = useWorkoutStore();
 
   const { theme, isDark } = useTheme();
@@ -51,11 +53,8 @@ export default function TodayScreen() {
     setActiveSession(hour < 13 ? 'morning' : 'night');
   }, []);
 
-  if (!startDate) {
-    return <OnboardingPrompt onStart={startProgram} />;
-  }
-
-  const week = getCurrentWeek();
+  const weekUnfiltered = getCurrentWeek();
+  const week = getProgramForEquipment([weekUnfiltered], userProfile.equipment || ['none'])[0];
   const rawExercises = week.session[activeSession];
   
   // Resolve exercises (check for swaps)
@@ -75,6 +74,12 @@ export default function TodayScreen() {
   const sessionDone = isSessionDoneToday(activeSession);
   const streak = getStreak();
   const completionRate = getWeeklyCompletionRate();
+
+  const currentDateFormatted = new Date().toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric'
+  }).toUpperCase();
 
   const handleSwap = (slotId: string, tag: ExerciseTag) => {
     setSwapTarget({ slotId, tag });
@@ -137,6 +142,7 @@ export default function TodayScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View>
+            <Text style={styles.dateLabel}>{currentDateFormatted}</Text>
             <Text style={styles.greeting}>{getGreeting(language)}</Text>
             <Text style={styles.weekLabel}>{t('week', language)} {week.id.split('-')[1]}</Text>
           </View>
@@ -249,28 +255,6 @@ function StatChip({ value, label }: { value: string | number; label: string }) {
   );
 }
 
-function OnboardingPrompt({ onStart }: { onStart: () => void }) {
-  const { language } = useWorkoutStore();
-  const { theme } = useTheme();
-  const styles = createStyles(theme);
-  return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.onboarding}>
-        <Text style={styles.onboardEmoji}>💪</Text>
-        <Text style={styles.onboardTitle}>{language === 'en' ? 'Ready to start?' : 'Prêt à commencer ?'}</Text>
-        <Text style={styles.onboardDesc}>
-          {language === 'en' 
-            ? "Your personalised home workout program. No equipment needed. 15 minutes, morning and night."
-            : "Votre programme d'entraînement à domicile personnalisé. Aucun équipement nécessaire. 15 minutes, matin et soir."}
-        </Text>
-        <TouchableOpacity style={styles.startBtn} onPress={onStart}>
-          <Text style={styles.startBtnText}>{language === 'en' ? 'Start Week 1' : 'Commencer Semaine 1'}</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-}
-
 function getGreeting(lang: string): string {
   const hour = new Date().getHours();
   if (hour < 12) return t('greeting_morning', lang as any);
@@ -287,6 +271,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 20,
   },
+  dateLabel: { fontSize: 11, fontWeight: '700', color: theme.textSecondary, letterSpacing: 1, marginBottom: 4 },
   greeting: { fontSize: 22, fontWeight: '700', color: theme.text },
   weekLabel: { fontSize: 13, color: theme.textSecondary, marginTop: 2 },
   headerRight: {
@@ -382,11 +367,4 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   finishBtnPartial: { backgroundColor: theme.textSecondary },
   finishText: { fontSize: 15, fontWeight: '600', color: theme.primaryContrast },
-  // Onboarding
-  onboarding: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 },
-  onboardEmoji: { fontSize: 64, marginBottom: 24 },
-  onboardTitle: { fontSize: 28, fontWeight: '700', color: theme.text, marginBottom: 12 },
-  onboardDesc: { fontSize: 15, color: theme.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 40 },
-  startBtn: { backgroundColor: theme.primary, borderRadius: 16, paddingVertical: 16, paddingHorizontal: 40 },
-  startBtnText: { fontSize: 16, fontWeight: '600', color: theme.primaryContrast },
 });

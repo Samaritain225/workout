@@ -8,13 +8,13 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWorkoutStore } from '../store/useWorkoutStore';
 import { t } from '../constants/translations';
 import { useTheme } from '../hooks/useTheme';
 import { StatusBar } from 'expo-status-bar';
 import { COLORS } from '../constants/theme';
 import { router, Stack } from 'expo-router';
+import { EquipmentType } from '../types';
 
 export default function SettingsScreen() {
   const { language, setLanguage, userProfile, updateProfile, themeMode, setThemeMode, resetAll } = useWorkoutStore();
@@ -51,18 +51,13 @@ export default function SettingsScreen() {
   const bmi = calculateBMI();
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
       <Stack.Screen options={{ 
         headerShown: true, 
         title: t('settings', language),
         headerStyle: { backgroundColor: theme.background },
         headerTintColor: theme.text,
-        headerShadowVisible: false,
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => router.back()} style={{ marginLeft: 10 }}>
-            <Text style={{ fontSize: 24, color: theme.text }}>←</Text>
-          </TouchableOpacity>
-        )
+        headerShadowVisible: false
       }} />
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -128,6 +123,40 @@ export default function SettingsScreen() {
             </Text>
           </View>
         )}
+
+        {/* Equipment Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{language === 'en' ? 'Equipment' : 'Équipement'}</Text>
+          <View style={styles.toggleRow}>
+            <TouchableOpacity 
+              style={[styles.toggleBtn, (userProfile.equipment || ['none']).includes('none') && styles.toggleBtnActive]}
+              onPress={() => updateProfile({ equipment: ['none'] })}
+            >
+              <Text style={[styles.toggleText, (userProfile.equipment || ['none']).includes('none') && styles.toggleTextActive]}>
+                {language === 'en' ? 'None' : 'Aucun'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.toggleBtn, (userProfile.equipment || []).includes('dumbbells') && styles.toggleBtnActive]}
+              onPress={() => {
+                let current = userProfile.equipment || (['none'] as EquipmentType[]);
+                const withoutNone = current.filter(e => e !== 'none');
+                let newEq: EquipmentType[];
+                if (withoutNone.includes('dumbbells')) {
+                  const removed = withoutNone.filter(e => e !== 'dumbbells');
+                  newEq = removed.length === 0 ? ['none'] : removed;
+                } else {
+                  newEq = [...withoutNone, 'dumbbells'];
+                }
+                updateProfile({ equipment: newEq });
+              }}
+            >
+              <Text style={[styles.toggleText, (userProfile.equipment || []).includes('dumbbells') && styles.toggleTextActive]}>
+                {language === 'en' ? 'Dumbbells' : 'Haltères'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
 
         {/* Language Section */}
         <View style={styles.section}>
@@ -198,7 +227,7 @@ export default function SettingsScreen() {
           <Text style={styles.version}>Workout App v1.0.0</Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
