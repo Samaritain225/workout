@@ -1,0 +1,77 @@
+import { Exercise } from '../types';
+
+export const EXERCISE_LIBRARY: Exercise[] = [
+  // ABS
+  {
+    id: 'crunches',
+    name: 'Crunches',
+    tag: 'abs',
+    reps: 20,
+    unit: 'reps',
+    instructions: 'Lie on your back with knees bent. Lift your shoulders off the floor while keeping your lower back pressed down.',
+    videoUrl: 'https://www.youtube.com/watch?v=Xyd_fa5zoEU',
+    equipment: ['none'],
+  },
+  {
+    id: 'leg_raises',
+    name: 'Leg Raises',
+    tag: 'abs',
+    reps: 15,
+    unit: 'reps',
+    instructions: 'Lie on your back, legs straight. Raise your legs to a 90-degree angle, then lower them slowly without touching the floor.',
+    videoUrl: 'https://www.youtube.com/watch?v=l4kQd9eWclE',
+    equipment: ['none'],
+  },
+  {
+    id: 'plank',
+    name: 'Plank',
+    tag: 'abs',
+    reps: 45,
+    unit: 'sec',
+    instructions: 'Hold a push-up position but rest on your forearms. Keep your body in a straight line from head to heels.',
+    videoUrl: 'https://www.youtube.com/watch?v=pSHjTRCQxIw',
+    equipment: ['none'],
+  },
+  // UPPER
+  {
+    id: 'push_ups',
+    name: 'Push-ups',
+    tag: 'upper',
+    reps: 12,
+    unit: 'reps',
+    instructions: 'Keep your body straight. Lower yourself until your chest nearly touches the floor, then push back up.',
+    videoUrl: 'https://www.youtube.com/watch?v=IODxDxX7oi4',
+    equipment: ['none'],
+  },
+  {
+    id: 'dips',
+    name: 'Bench Dips',
+    tag: 'upper',
+    reps: 12,
+    unit: 'reps',
+    instructions: 'Use a stable chair or bench. Lower your hips by bending your elbows until they are at a 90-degree angle.',
+    videoUrl: 'https://www.youtube.com/watch?v=0326dy_-CzM',
+    equipment: ['none'],
+  },
+  // LEGS
+  {
+    id: 'squats',
+    name: 'Squats',
+    tag: 'legs',
+    reps: 20,
+    unit: 'reps',
+    instructions: 'Stand with feet shoulder-width apart. Lower your hips as if sitting in a chair, keeping your chest up.',
+    videoUrl: 'https://www.youtube.com/watch?v=gcNh17Ckjgg',
+    equipment: ['none'],
+  },
+  {
+    id: 'lunges',
+    name: 'Lunges',
+    tag: 'legs',
+    reps: 10,
+    unit: 'reps/leg',
+    instructions: 'Step forward and lower your hips until both knees are bent at a 90-degree angle.',
+    videoUrl: 'https://www.youtube.com/watch?v=L8fyJH_R3V8',
+    equipment: ['none'],
+  },
+];

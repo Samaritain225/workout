@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Workout Tracker",
+    "slug": "workout",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "workout-app",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#111827"
+      },
+      "package": "com.workouttracker.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "android": {
+            "backgroundColor": "#111827",
+            "image": "./assets/images/splash-icon.png",
+            "imageWidth": 180
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a643e810-0150-4041-95d2-dbe47ca3494f"
+      }
+    },
+    "owner": "doumbia-225"
+  }
+}
