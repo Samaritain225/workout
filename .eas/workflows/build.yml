@@ -1,0 +1,12 @@
+name: Production Build (Android APK)
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build_android:
+    type: build
+    params:
+      platform: android
+      profile: production
