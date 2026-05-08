@@ -51,7 +51,7 @@ export const useWorkoutStore = create<WorkoutStore>()(
       nightNotifTime: null,
       customExerciseMap: {},
       language: 'en',
-      userProfile: {},
+      userProfile: { equipment: ['none'] },
       themeMode: 'system',
 
       // --- Computed ---
@@ -207,7 +207,7 @@ export const useWorkoutStore = create<WorkoutStore>()(
           nightNotifTime: null,
           customExerciseMap: {},
           language: 'en',
-          userProfile: {},
+          userProfile: { equipment: ['none'] },
           themeMode: 'system',
         });
       },

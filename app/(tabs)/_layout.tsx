@@ -1,4 +1,5 @@
-import { Tabs } from 'expo-router';
+import { Tabs, router } from 'expo-router';
+import { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { t } from '../../constants/translations';
 import { useWorkoutStore } from '../../store/useWorkoutStore';
@@ -19,8 +20,16 @@ function TabIcon({ focused, icon }: TabIconProps) {
 }
 
 export default function TabLayout() {
-  const { language } = useWorkoutStore();
+  const { language, startDate } = useWorkoutStore();
   const { theme } = useTheme();
+
+  useEffect(() => {
+    if (!startDate) {
+      router.replace('/onboarding');
+    }
+  }, [startDate]);
+
+  if (!startDate) return null;
 
   return (
     <Tabs
@@ -32,12 +41,12 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: theme.card,
           borderTopColor: theme.border,
-          height: 65,
-          paddingBottom: 10,
-          paddingTop: 8,
+          height: 80,
+          paddingBottom: 24,
+          paddingTop: 12,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 13,
           fontWeight: '600',
         },
       }}
@@ -88,8 +97,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   icon: {
-    fontSize: 22,
+    fontSize: 26,
     opacity: 0.4,
+    marginBottom: 4,
   },
   iconFocused: {
     opacity: 1,

@@ -1,4 +1,4 @@
-import { Week } from '../types';
+import { Week, EquipmentType, Exercise } from '../types';
 
 export const WEEKS: Week[] = [
   {
@@ -220,4 +220,44 @@ export function getWeekIndexFromStartDate(startDate: string): number {
   if (weekNumber <= 5) return 4;  // w5 (weeks 5-6)
   if (weekNumber <= 7) return 5;  // w6 (weeks 7-8)
   return 6;                        // w7 (month 3+)
+}
+
+export function getProgramForEquipment(weeks: Week[], userEquipment: EquipmentType[] = ['none']): Week[] {
+  const hasDumbbells = userEquipment.includes('dumbbells');
+
+  return weeks.map(week => {
+    const processExercises = (exercises: Exercise[]) => {
+      return exercises.map(ex => {
+        const baseEx: Exercise = { ...ex, equipment: ex.equipment || (['none'] as EquipmentType[]) };
+        
+        if (hasDumbbells) {
+          let alt = null;
+          if (ex.id.includes('squat') && ex.id !== 'jump-squat') alt = { id: 'db_goblet_squat', name: 'Goblet Squats' };
+          else if (ex.id.includes('lunge')) alt = { id: 'db_lunges', name: 'Dumbbell Lunges' };
+          else if (ex.id.includes('pushup') && !ex.id.includes('pike')) alt = { id: 'db_chest_press', name: 'Dumbbell Chest Press' };
+          else if (ex.id.includes('pike-pushup')) alt = { id: 'db_rows', name: 'Dumbbell Rows' }; // Pulling motion
+          
+          if (alt) {
+             return {
+               ...baseEx,
+               id: alt.id,
+               name: alt.name,
+               equipment: ['dumbbells'] as EquipmentType[]
+             };
+          }
+        }
+        
+        return baseEx;
+      });
+    };
+
+    return {
+      ...week,
+      session: {
+        ...week.session,
+        morning: processExercises(week.session.morning),
+        night: processExercises(week.session.night),
+      }
+    };
+  });
 }

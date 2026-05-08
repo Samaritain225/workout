@@ -16,6 +16,7 @@ export interface Exercise {
   thumbnail?: string;    // Image URL for preview
   instructions?: string; // Text description
   equipment?: EquipmentType[];
+  alternatives?: Exercise[];
 }
 
 export interface DaySession {
@@ -64,4 +65,5 @@ export interface UserProfile {
   weight?: number; // kg
   age?: number;
   gender?: 'male' | 'female' | 'other';
+  equipment?: EquipmentType[];
 }
