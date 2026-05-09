@@ -51,7 +51,7 @@ export default function OnboardingScreen() {
         {step === 1 && (
           <View style={styles.content}>
             <Text style={styles.emoji}>🚀</Text>
-            <Text style={styles.title}>Welcome to Workout Tracker</Text>
+            <Text style={styles.title}>Welcome to Workout</Text>
             <Text style={styles.description}>
               Your personalised home workout program. 15 minutes, morning and night.
             </Text>

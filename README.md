@@ -1,4 +1,4 @@
-# Workout Tracker App
+# Workout App
 
 A personal home workout tracker built with Expo + TypeScript.
 

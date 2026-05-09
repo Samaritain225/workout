@@ -14,6 +14,9 @@ import { ExerciseRow } from '../../components/ExerciseRow';
 import { WeekBanner } from '../../components/WeekBanner';
 import { getProgramForEquipment } from '../../constants/program';
 import { ExercisePicker } from '../../components/ExercisePicker';
+import { ExerciseDetailsModal } from '../../components/ExerciseDetailsModal';
+import { StreakCelebration } from '../../components/StreakCelebration';
+import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { EXERCISE_LIBRARY } from '../../constants/exercises';
 import { SessionType, ExerciseTag, Exercise } from '../../types';
 import { t } from '../../constants/translations';
@@ -46,6 +49,11 @@ export default function TodayScreen() {
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [pickerOpen, setPickerOpen] = useState(false);
   const [swapTarget, setSwapTarget] = useState<{ slotId: string; tag: ExerciseTag } | null>(null);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [showStreakCelebration, setShowStreakCelebration] = useState(false);
+  const [newStreakCount, setNewStreakCount] = useState(0);
+  const [customAddedExercises, setCustomAddedExercises] = useState<Exercise[]>([]);
+  const [addingNew, setAddingNew] = useState(false);
 
   // Determine which session to show based on time of day
   useEffect(() => {
@@ -66,8 +74,43 @@ export default function TodayScreen() {
         return { ...libEx, id: ex.id, originalName: libEx.name }; // Keep slot ID for tracking
       }
     }
+    
+    // Fallback dictionary for hardcoded program IDs to EXERCISE_LIBRARY IDs
+    const fallbackMap: Record<string, string> = {
+      'wide-pushup': 'push_ups',
+      'pike-pushup': 'push_ups',
+      'reg-pushup': 'push_ups',
+      'diamond-pushup': 'push_ups',
+      'decline-pushup': 'push_ups',
+      'squat': 'squats',
+      'lunge': 'lunges',
+      'leg-raise': 'leg_raises',
+      'plank-m': 'plank',
+      'plank-n': 'plank',
+      'glute-bridge': 'glute_bridges',
+      'rev-crunch': 'reverse_crunches',
+      'bicycle': 'crunches',
+      'bulgarian-split': 'lunges',
+      'hollow-hold': 'plank',
+      'pull-ups': 'dips',
+    };
+    
+    const finalMatchId = fallbackMap[ex.id];
+    const fallbackEx = EXERCISE_LIBRARY.find(l => l.id === finalMatchId);
+
+    if (fallbackEx) {
+      return { 
+        ...ex, 
+        instructions: fallbackEx.instructions, 
+        videoUrl: fallbackEx.videoUrl, 
+        thumbnail: fallbackEx.thumbnail 
+      };
+    }
+
     return ex;
   });
+
+  const finalExercises = [...exercises, ...customAddedExercises];
 
   const morningDone = isSessionDoneToday('morning');
   const nightDone = isSessionDoneToday('night');
@@ -87,7 +130,15 @@ export default function TodayScreen() {
   };
 
   const onSelectExercise = (libEx: Exercise) => {
-    if (swapTarget) {
+    if (addingNew) {
+      if (finalExercises.some(ex => ex.id === libEx.id)) {
+        Alert.alert('Already Added', 'This exercise is already in your session today.', [{ text: 'OK' }]);
+      } else {
+        setCustomAddedExercises(prev => [...prev, libEx]);
+      }
+      setPickerOpen(false);
+      setAddingNew(false);
+    } else if (swapTarget) {
       setCustomExercise(swapTarget.slotId, libEx.id);
       setPickerOpen(false);
       setSwapTarget(null);
@@ -105,18 +156,26 @@ export default function TodayScreen() {
 
   const handleFinish = () => {
     const repsMap: Record<string, number> = {};
-    exercises.forEach((ex) => {
+    finalExercises.forEach((ex) => {
       repsMap[ex.id] = getRepsForExercise(week.id, ex.id, ex.reps);
     });
 
+    const streakBefore = getStreak();
     logSession(week.id, activeSession, Array.from(checked), repsMap);
     setChecked(new Set());
+    setCustomAddedExercises([]);
+    const streakAfter = useWorkoutStore.getState().getStreak();
 
-    Alert.alert(
-      activeSession === 'morning' ? (language === 'en' ? 'Morning done! 💪' : 'Matin terminé ! 💪') : (language === 'en' ? 'Night session done! 🌙' : 'Séance du soir terminée ! 🌙'),
-      activeSession === 'morning' ? (language === 'en' ? 'See you tonight.' : 'À ce soir.') : (language === 'en' ? 'Rest and let your muscles rebuild.' : 'Reposez-vous et laissez vos muscles se reconstruire.'),
-      [{ text: 'OK' }]
-    );
+    if (streakAfter > streakBefore) {
+      setNewStreakCount(streakAfter);
+      setShowStreakCelebration(true);
+    } else {
+      Alert.alert(
+        activeSession === 'morning' ? (language === 'en' ? 'Morning done! 💪' : 'Matin terminé ! 💪') : (language === 'en' ? 'Night session done! 🌙' : 'Séance du soir terminée ! 🌙'),
+        activeSession === 'morning' ? (language === 'en' ? 'See you tonight.' : 'À ce soir.') : (language === 'en' ? 'Rest and let your muscles rebuild.' : 'Reposez-vous et laissez vos muscles se reconstruire.'),
+        [{ text: 'OK' }]
+      );
+    }
   };
 
   const handleUndo = () => {
@@ -133,7 +192,7 @@ export default function TodayScreen() {
     }
   };
 
-  const allChecked = exercises.length > 0 && checked.size === exercises.length;
+  const allChecked = finalExercises.length > 0 && checked.size === finalExercises.length;
   const someChecked = checked.size > 0;
 
   return (
@@ -154,7 +213,7 @@ export default function TodayScreen() {
               <Text style={styles.settingsIcon}>⚙️</Text>
             </TouchableOpacity>
             <View style={styles.statsRow}>
-              <StatChip value={streak} label={t('streak', language)} />
+              <StatChip value={streak} label={t('streak', language)} isStreak />
               <StatChip value={`${completionRate}%`} label={t('completion', language)} />
             </View>
           </View>
@@ -167,7 +226,7 @@ export default function TodayScreen() {
             return (
               <TouchableOpacity
                 key={s}
-                onPress={() => { setActiveSession(s); setChecked(new Set()); }}
+                onPress={() => { setActiveSession(s); setChecked(new Set()); setCustomAddedExercises([]); }}
                 style={[styles.sessionBtn, activeSession === s && styles.sessionBtnActive]}
               >
                 <Text style={[styles.sessionBtnText, activeSession === s && styles.sessionBtnTextActive]}>
@@ -198,7 +257,7 @@ export default function TodayScreen() {
           </View>
         ) : (
           <>
-            {exercises.map((ex) => (
+            {finalExercises.map((ex) => (
               <ExerciseRow
                 key={ex.id}
                 exercise={ex}
@@ -207,8 +266,20 @@ export default function TodayScreen() {
                 onToggle={() => toggleExercise(ex.id)}
                 onUpdateReps={(reps) => setCustomReps(week.id, ex.id, reps)}
                 onSwap={() => handleSwap(ex.id, ex.tag)}
+                onShowDetails={() => setSelectedExercise(ex)}
               />
             ))}
+
+            {/* Add Custom Exercise Button */}
+            <TouchableOpacity
+              style={styles.addExerciseBtn}
+              onPress={() => {
+                setAddingNew(true);
+                setPickerOpen(true);
+              }}
+            >
+              <Text style={styles.addExerciseBtnText}>+ {language === 'en' ? 'Add Exercise' : 'Ajouter Exercice'}</Text>
+            </TouchableOpacity>
 
             {/* Note */}
             <View style={styles.noteBox}>
@@ -225,7 +296,7 @@ export default function TodayScreen() {
                 onPress={handleFinish}
               >
                 <Text style={styles.finishText}>
-                  {allChecked ? `${t('complete_session', language)} ✓` : `${language === 'en' ? 'Done for now' : 'Fait pour l\'instant'} (${checked.size}/${exercises.length})`}
+                  {allChecked ? `${t('complete_session', language)} ✓` : `${language === 'en' ? 'Done for now' : 'Fait pour l\'instant'} (${checked.size}/${finalExercises.length})`}
                 </Text>
               </TouchableOpacity>
             )}
@@ -235,21 +306,58 @@ export default function TodayScreen() {
 
       <ExercisePicker
         visible={pickerOpen}
-        onClose={() => setPickerOpen(false)}
+        onClose={() => { setPickerOpen(false); setAddingNew(false); }}
         onSelect={onSelectExercise}
-        tag={swapTarget?.tag ?? 'abs'}
+        tag={addingNew ? undefined : (swapTarget?.tag ?? 'abs')}
         currentExerciseId={swapTarget ? customExerciseMap[swapTarget.slotId] : undefined}
+      />
+      <ExerciseDetailsModal
+        visible={!!selectedExercise}
+        exercise={selectedExercise}
+        onClose={() => setSelectedExercise(null)}
+      />
+      <StreakCelebration
+        visible={showStreakCelebration}
+        streak={newStreakCount}
+        onComplete={() => setShowStreakCelebration(false)}
       />
     </SafeAreaView>
   );
 }
 
-function StatChip({ value, label }: { value: string | number; label: string }) {
+function StatChip({ value, label, isStreak }: { value: string | number; label: string; isStreak?: boolean }) {
   const { theme } = useTheme();
   const styles = createStyles(theme);
+
+  const pulse = useSharedValue(1);
+
+  React.useEffect(() => {
+    if (isStreak && typeof value === 'number' && value > 0) {
+      pulse.value = withRepeat(
+        withSequence(
+          withTiming(1.15, { duration: 1000 }),
+          withTiming(1, { duration: 1000 })
+        ),
+        -1, // infinite
+        true
+      );
+    } else {
+      pulse.value = withTiming(1);
+    }
+  }, [isStreak, value]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pulse.value }],
+  }));
+
   return (
     <View style={styles.chip}>
-      <Text style={styles.chipValue}>{value}</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+        {isStreak && typeof value === 'number' && value > 0 && (
+          <Animated.Text style={[animatedStyle, { fontSize: 16 }]}>🔥</Animated.Text>
+        )}
+        <Text style={styles.chipValue}>{value}</Text>
+      </View>
       <Text style={styles.chipLabel}>{label}</Text>
     </View>
   );
@@ -367,4 +475,19 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   finishBtnPartial: { backgroundColor: theme.textSecondary },
   finishText: { fontSize: 15, fontWeight: '600', color: theme.primaryContrast },
+  addExerciseBtn: {
+    backgroundColor: theme.background,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: theme.border,
+    borderStyle: 'dashed',
+  },
+  addExerciseBtnText: {
+    color: theme.textSecondary,
+    fontSize: 14,
+    fontWeight: '600',
+  },
 });

@@ -32,10 +32,11 @@ interface Props {
   onToggle: () => void;
   onUpdateReps: (reps: number) => void;
   onSwap?: () => void;
+  onShowDetails?: () => void;
   disabled?: boolean;
 }
 
-export function ExerciseRow({ exercise, currentReps, done, onToggle, onUpdateReps, onSwap, disabled }: Props) {
+export function ExerciseRow({ exercise, currentReps, done, onToggle, onUpdateReps, onSwap, onShowDetails, disabled }: Props) {
   const { language } = useWorkoutStore();
   const { theme } = useTheme();
   const styles = createStyles(theme);
@@ -121,7 +122,12 @@ export function ExerciseRow({ exercise, currentReps, done, onToggle, onUpdateRep
             {done && <Text style={styles.checkmark}>✓</Text>}
           </TouchableOpacity>
 
-          <View style={styles.info}>
+          <TouchableOpacity 
+            style={styles.info}
+            onPress={onShowDetails}
+            activeOpacity={0.6}
+            disabled={!onShowDetails}
+          >
             <View style={styles.nameRow}>
               <Text style={[styles.name, done && styles.nameDone]}>{exercise.name}</Text>
               {exercise.isNew && (
@@ -136,7 +142,7 @@ export function ExerciseRow({ exercise, currentReps, done, onToggle, onUpdateRep
             {exercise.sub && (
               <Text style={styles.sub}>{exercise.sub}</Text>
             )}
-          </View>
+          </TouchableOpacity>
 
           <TouchableOpacity 
             onPress={() => { 

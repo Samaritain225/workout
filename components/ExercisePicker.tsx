@@ -21,7 +21,7 @@ interface ExercisePickerProps {
   visible: boolean;
   onClose: () => void;
   onSelect: (exercise: Exercise) => void;
-  tag: ExerciseTag;
+  tag?: ExerciseTag | null;
   currentExerciseId?: string;
 }
 
@@ -29,14 +29,14 @@ export function ExercisePicker({ visible, onClose, onSelect, tag, currentExercis
   const { language } = useWorkoutStore();
   const { theme, isDark } = useTheme();
   const styles = createStyles(theme);
-  const alternatives = EXERCISE_LIBRARY.filter((ex) => ex.tag === tag);
+  const alternatives = tag ? EXERCISE_LIBRARY.filter((ex) => ex.tag === tag) : EXERCISE_LIBRARY;
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <SafeAreaView style={styles.container}>
         <StatusBar style={isDark ? 'light' : 'dark'} />
         <View style={styles.header}>
-          <Text style={styles.title}>{language === 'en' ? `Choose ${tag} exercise` : `Choisir exercice ${tag}`}</Text>
+          <Text style={styles.title}>{tag ? (language === 'en' ? `Choose ${tag} exercise` : `Choisir exercice ${tag}`) : (language === 'en' ? 'Add Custom Exercise' : 'Ajouter un exercice')}</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
             <Text style={styles.closeText}>{t('cancel', language)}</Text>
           </TouchableOpacity>
@@ -55,12 +55,12 @@ export function ExercisePicker({ visible, onClose, onSelect, tag, currentExercis
               <Text style={styles.cardTitle}>{ex.name}</Text>
               {ex.instructions && (
                 <Text style={styles.cardDesc} numberOfLines={2}>
-                  {ex.instructions}
+                  {ex.instructions[language as 'en' | 'fr']}
                 </Text>
               )}
 
               <View style={styles.footer}>
-                {ex.videoUrl ? (
+                {!!ex.videoUrl ? (
                   <TouchableOpacity
                     onPress={() => Linking.openURL(ex.videoUrl!)}
                     style={styles.actionBtn}
