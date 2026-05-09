@@ -1,13 +1,12 @@
 {
   "expo": {
-    "name": "Workout Tracker",
+    "name": "Workout",
     "slug": "workout",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "workout-app",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.workouttracker.app",
@@ -18,7 +17,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#111827"
+        "backgroundColor": "#262930"
       },
       "package": "com.workouttracker.app"
     },
@@ -33,7 +32,7 @@
         "expo-splash-screen",
         {
           "android": {
-            "backgroundColor": "#111827",
+            "backgroundColor": "#262930",
             "image": "./assets/images/splash-icon.png",
             "imageWidth": 180
           }

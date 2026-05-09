@@ -13,8 +13,8 @@ export interface Exercise {
   delta?: string;
   sub?: string;
   videoUrl?: string;     // YouTube or video link
-  thumbnail?: string;    // Image URL for preview
-  instructions?: string; // Text description
+  thumbnail?: any;       // Image URL or require()
+  instructions?: { en: string; fr: string }; // Text description
   equipment?: EquipmentType[];
   alternatives?: Exercise[];
 }
