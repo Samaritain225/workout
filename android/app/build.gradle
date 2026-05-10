@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.workouttracker.app'
+    namespace 'com.workouttracker.app.dev'
     defaultConfig {
-        applicationId 'com.workouttracker.app'
+        applicationId 'com.workouttracker.app.dev'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

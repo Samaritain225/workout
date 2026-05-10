@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -8,13 +8,14 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import { useWorkoutStore } from '../store/useWorkoutStore';
-import { t } from '../constants/translations';
-import { useTheme } from '../hooks/useTheme';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { t } from '@/constants/translations';
+import { useTheme } from '@/hooks/useTheme';
 import { StatusBar } from 'expo-status-bar';
-import { COLORS } from '../constants/theme';
-import { router, Stack } from 'expo-router';
-import { EquipmentType } from '../types';
+import { COLORS } from '@/constants/theme';
+import { Stack } from 'expo-router';
+import { EquipmentType } from '@/types';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export default function SettingsScreen() {
   const { language, setLanguage, userProfile, updateProfile, themeMode, setThemeMode, resetAll } = useWorkoutStore();
@@ -60,9 +61,9 @@ export default function SettingsScreen() {
         headerShadowVisible: false
       }} />
       <StatusBar style={isDark ? 'light' : 'dark'} />
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Profile Section */}
-        <View style={styles.section}>
+        <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.section}>
           <Text style={styles.sectionTitle}>{t('profile', language)}</Text>
           
           <View style={styles.inputGroup}>
@@ -73,6 +74,7 @@ export default function SettingsScreen() {
               value={height}
               onChangeText={setHeight}
               placeholder="175"
+              placeholderTextColor={theme.textMuted}
             />
           </View>
 
@@ -84,6 +86,7 @@ export default function SettingsScreen() {
               value={weight}
               onChangeText={setWeight}
               placeholder="70"
+              placeholderTextColor={theme.textMuted}
             />
           </View>
 
@@ -95,18 +98,19 @@ export default function SettingsScreen() {
               value={age}
               onChangeText={setAge}
               placeholder="25"
+              placeholderTextColor={theme.textMuted}
             />
           </View>
 
           <TouchableOpacity style={styles.saveBtn} onPress={handleSaveProfile}>
             <Text style={styles.saveBtnText}>{t('save', language)}</Text>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
 
         {/* Body Insights */}
         {bmi && (
-          <View style={[styles.section, styles.insightSection]}>
-            <Text style={styles.sectionTitle}>Body Insights</Text>
+          <Animated.View entering={FadeInDown.delay(200).duration(500)} style={[styles.section, styles.insightSection]}>
+            <Text style={[styles.sectionTitle, { color: theme.accent }]}>Body Insights</Text>
             <View style={styles.bmiCard}>
               <View>
                 <Text style={styles.bmiLabel}>Your BMI</Text>
@@ -121,11 +125,10 @@ export default function SettingsScreen() {
                 ? "This is a general indicator. Muscle mass can affect BMI accuracy for athletes."
                 : "Ceci est un indicateur général. La masse musculaire peut affecter la précision de l'IMC pour les athlètes."}
             </Text>
-          </View>
+          </Animated.View>
         )}
 
-        {/* Equipment Section */}
-        <View style={styles.section}>
+        <Animated.View entering={FadeInDown.delay(300).duration(500)} style={styles.section}>
           <Text style={styles.sectionTitle}>{language === 'en' ? 'Equipment' : 'Équipement'}</Text>
           <View style={styles.toggleRow}>
             <TouchableOpacity 
@@ -156,10 +159,10 @@ export default function SettingsScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Language Section */}
-        <View style={styles.section}>
+        <Animated.View entering={FadeInDown.delay(400).duration(500)} style={styles.section}>
           <Text style={styles.sectionTitle}>{t('language', language)}</Text>
           <View style={styles.toggleRow}>
             <TouchableOpacity 
@@ -175,10 +178,10 @@ export default function SettingsScreen() {
               <Text style={[styles.toggleText, language === 'fr' && styles.toggleTextActive]}>Français</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Theme Section */}
-        <View style={styles.section}>
+        <Animated.View entering={FadeInDown.delay(500).duration(500)} style={styles.section}>
           <Text style={styles.sectionTitle}>{language === 'en' ? 'Appearance' : 'Apparence'}</Text>
           <View style={styles.toggleRow}>
             <TouchableOpacity 
@@ -206,7 +209,7 @@ export default function SettingsScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Reset Section */}
         <View style={styles.footer}>

@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useWorkoutStore } from '../../store/useWorkoutStore';
-import { WeekBanner } from '../../components/WeekBanner';
-import { WEEKS, GOLDEN_RULES, UPGRADES, getProgramForEquipment } from '../../constants/program';
-import { SessionType } from '../../types';
-import { useTheme } from '../../hooks/useTheme';
-import { t } from '../../constants/translations';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { WeekBanner } from '@/components/WeekBanner';
+import { WEEKS, GOLDEN_RULES, UPGRADES, getProgramForEquipment } from '@/constants/program';
+import { SessionType } from '@/types';
+import { useTheme } from '@/hooks/useTheme';
+import { t } from '@/constants/translations';
 import { COLORS } from '@/constants/theme';
 import { router } from 'expo-router';
 
@@ -29,8 +29,11 @@ export default function ProgramScreen() {
   const exercises = week.isLongTerm ? [] : week.session[activeSession];
   const isCurrentWeek = selectedWeekIndex === currentWeekIndex;
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.container}>
+      <View style={{ height: insets.top, backgroundColor: theme.background }} />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.pageHeader}>
           <Text style={styles.title}>{t('program', language)}</Text>
@@ -133,7 +136,7 @@ export default function ProgramScreen() {
           </>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -165,8 +168,8 @@ function LongTermView() {
 }
 
 const createStyles = (theme: any) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: theme.background },
-  scroll: { padding: 20, paddingBottom: 40 },
+  container: { flex: 1, backgroundColor: theme.background },
+  scroll: { padding: 20, paddingBottom: 40 + 80 },
   title: { fontSize: 26, fontWeight: '700', color: theme.text },
   pageHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
   settingsBtn: { padding: 4 },

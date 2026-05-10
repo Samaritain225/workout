@@ -1,9 +1,9 @@
 import { Tabs, router } from 'expo-router';
 import { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { t } from '../../constants/translations';
-import { useWorkoutStore } from '../../store/useWorkoutStore';
-import { useTheme } from '../../hooks/useTheme';
+import { t } from '@/constants/translations';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { useTheme } from '@/hooks/useTheme';
 
 interface TabIconProps {
   focused: boolean;
@@ -35,7 +35,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        lazy: false,
+        lazy: true,
         tabBarActiveTintColor: theme.accent,
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
