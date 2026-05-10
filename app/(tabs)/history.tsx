@@ -7,13 +7,13 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useWorkoutStore } from '../../store/useWorkoutStore';
-import { EXERCISE_LIBRARY } from '../../constants/exercises';
-import { useTheme } from '../../hooks/useTheme';
-import { t } from '../../constants/translations';
-import { WEEKS } from '../../constants/program';
-import { WorkoutLog } from '../../types';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { EXERCISE_LIBRARY } from '@/constants/exercises';
+import { useTheme } from '@/hooks/useTheme';
+import { t } from '@/constants/translations';
+import { WEEKS } from '@/constants/program';
+import { WorkoutLog } from '@/types';
 import { router } from 'expo-router';
 
 export default function HistoryScreen() {
@@ -36,8 +36,11 @@ export default function HistoryScreen() {
     );
   };
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.container}>
+      <View style={{ height: insets.top, backgroundColor: theme.background }} />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.pageHeader}>
           <Text style={styles.title}>{t('history', language)}</Text>
@@ -71,7 +74,7 @@ export default function HistoryScreen() {
           })
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -125,8 +128,8 @@ function formatDate(dateStr: string): string {
 }
 
 const createStyles = (theme: any) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: theme.background },
-  scroll: { padding: 20, paddingBottom: 40 },
+  container: { flex: 1, backgroundColor: theme.background },
+  scroll: { padding: 20, paddingBottom: 40 + 80 },
   title: { fontSize: 26, fontWeight: '700', color: theme.text },
   pageHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
   settingsBtn: { padding: 4 },
@@ -152,5 +155,6 @@ const createStyles = (theme: any) => StyleSheet.create({
   undoText: { color: theme.danger, fontSize: 12, fontWeight: '500' },
   exRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4 },
   exName: { fontSize: 13, color: theme.textSecondary, flex: 1 },
-  exReps: { fontSize: 13, fontWeight: '600', color: theme.text },
+  exReps: { fontSize: 13, fontWeight: '600', color: theme.text  },
 });
+

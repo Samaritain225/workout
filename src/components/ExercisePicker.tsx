@@ -9,12 +9,12 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { EXERCISE_LIBRARY } from '../constants/exercises';
-import { Exercise, ExerciseTag } from '../types';
+import { EXERCISE_LIBRARY } from '@/constants/exercises';
+import { Exercise, ExerciseTag } from '@/types';
 import * as Linking from 'expo-linking';
-import { useWorkoutStore } from '../store/useWorkoutStore';
-import { t } from '../constants/translations';
-import { useTheme } from '../hooks/useTheme';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { t } from '@/constants/translations';
+import { useTheme } from '@/hooks/useTheme';
 import { StatusBar } from 'expo-status-bar';
 
 interface ExercisePickerProps {

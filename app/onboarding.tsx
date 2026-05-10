@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useWorkoutStore } from '../store/useWorkoutStore';
-import { EquipmentType } from '../types';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { EquipmentType } from '@/types';
 
 export default function OnboardingScreen() {
   const { updateProfile, startProgram, language } = useWorkoutStore();

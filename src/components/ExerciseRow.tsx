@@ -9,13 +9,13 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import { Exercise } from '../types';
+import { Exercise } from '@/types';
 import { Timer } from './Timer';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import { useWorkoutStore } from '../store/useWorkoutStore';
-import { t } from '../constants/translations';
-import { useTheme } from '../hooks/useTheme';
-import { COLORS } from '../constants/theme';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { t } from '@/constants/translations';
+import { useTheme } from '@/hooks/useTheme';
+import { COLORS } from '@/constants/theme';
 import * as Haptics from 'expo-haptics';
 
 const createTagColors = (theme: any) => ({

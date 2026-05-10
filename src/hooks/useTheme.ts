@@ -1,6 +1,6 @@
 import { useColorScheme } from 'react-native';
-import { useWorkoutStore } from '../store/useWorkoutStore';
-import { COLORS } from '../constants/theme';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { COLORS } from '@/constants/theme';
 
 export function useTheme() {
   const systemColorScheme = useColorScheme();

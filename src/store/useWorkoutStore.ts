@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { WorkoutLog, SessionType, Language, UserProfile } from '../types';
-import { WEEKS, getWeekIndexFromStartDate } from '../constants/program';
+import { WorkoutLog, SessionType, Language, UserProfile } from '@/types';
+import { WEEKS, getWeekIndexFromStartDate } from '@/constants/program';
 
 interface WorkoutStore {
   // Onboarding
@@ -157,22 +157,36 @@ export const useWorkoutStore = create<WorkoutStore>()(
 
       setCustomReps: (weekId, exerciseId, newReps) => {
         const state = get();
-        const currentReps = state.getRepsForExercise(weekId, exerciseId, 0);
-        const delta = newReps - currentReps;
+        // Use the current effective reps (custom or default) to calculate the delta
+        const currentReps = state.getRepsForExercise(weekId, exerciseId, -1);
+        
+        let effectiveCurrent = currentReps;
+        if (currentReps === -1) {
+          // If no custom reps, find the default from the program
+          const week = WEEKS.find(w => w.id === weekId);
+          const ex = [...(week?.session.morning || []), ...(week?.session.night || [])].find(e => e.id === exerciseId);
+          effectiveCurrent = ex?.reps || 0;
+        }
 
+        const delta = newReps - effectiveCurrent;
         if (delta === 0) return;
 
         const updatedCustomReps = { ...state.customReps };
         const weekIndex = WEEKS.findIndex(w => w.id === weekId);
 
-        // Apply delta to this week and all subsequent weeks for the same exercise ID
+        // Apply delta to this week and all subsequent weeks
         WEEKS.slice(weekIndex).forEach(w => {
-          // Check if the exercise exists in this week (either morning or night)
           const hasEx = [...w.session.morning, ...w.session.night].some(e => e.id === exerciseId);
           if (hasEx) {
             const key = `${w.id}-${exerciseId}`;
-            const baseReps = state.getRepsForExercise(w.id, exerciseId, 0) || [...w.session.morning, ...w.session.night].find(e => e.id === exerciseId)?.reps || 0;
-            updatedCustomReps[key] = baseReps + delta;
+            // Get current effective reps for this specific week before applying delta
+            const weekCurrent = state.getRepsForExercise(w.id, exerciseId, -1);
+            let weekBase = weekCurrent;
+            if (weekCurrent === -1) {
+              const ex = [...w.session.morning, ...w.session.night].find(e => e.id === exerciseId);
+              weekBase = ex?.reps || 0;
+            }
+            updatedCustomReps[key] = weekBase + delta;
           }
         });
 

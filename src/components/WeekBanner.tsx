@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Week } from '../types';
-import { useTheme } from '../hooks/useTheme';
-import { COLORS } from '../constants/theme';
+import { Week } from '@/types';
+import { useTheme } from '@/hooks/useTheme';
 
 const PHASE_COLORS: Record<string, { bg: string; border: string; text: string; label: string }> = {
   blue:   { bg: '#EFF6FF', border: '#BFDBFE', text: '#1D4ED8', label: '#60A5FA' },

@@ -10,8 +10,8 @@ import Animated, {
   withDelay,
   runOnJS,
 } from 'react-native-reanimated';
-import { useTheme } from '../hooks/useTheme';
-import { useWorkoutStore } from '../store/useWorkoutStore';
+import { useTheme } from '@/hooks/useTheme';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
 import * as Haptics from 'expo-haptics';
 
 const { width } = Dimensions.get('window');
@@ -31,26 +31,39 @@ export function StreakCelebration({ visible, streak, onComplete }: Props) {
   const opacity = useSharedValue(0);
   const flameScale = useSharedValue(1);
 
+  // All hooks must be called before any early return
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
+  const flameStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: flameScale.value }],
+  }));
+
   useEffect(() => {
     if (visible) {
       // Haptic burst
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      
+
       scale.value = 0;
       opacity.value = 1;
 
       // Pop in
-      scale.value = withSpring(1, { damping: 12, stiffness: 90 }, () => {
-        // Pulse the flame
-        flameScale.value = withRepeat(
+      scale.value = withSpring(1, { damping: 12, stiffness: 90 });
+
+      // Pulse the flame shortly after pop in
+      flameScale.value = withDelay(
+        300,
+        withRepeat(
           withSequence(
             withTiming(1.2, { duration: 300 }),
             withTiming(1, { duration: 300 })
           ),
           3, // pulse 3 times
           true
-        );
-      });
+        )
+      );
 
       // Fade out and close after 2.5 seconds
       opacity.value = withDelay(
@@ -64,17 +77,7 @@ export function StreakCelebration({ visible, streak, onComplete }: Props) {
     }
   }, [visible]);
 
-  if (!visible) return null;
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: opacity.value,
-  }));
-
-  const flameStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: flameScale.value }],
-  }));
-
+  // Use Modal's visible prop instead of an early return to avoid hook order violations
   return (
     <Modal visible={visible} transparent animationType="none">
       <View style={styles.overlay}>

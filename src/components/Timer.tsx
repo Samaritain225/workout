@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '../hooks/useTheme';
-import { COLORS } from '../constants/theme';
+import { useTheme } from '@/hooks/useTheme';
+import { COLORS } from '@/constants/theme';
 
 interface TimerProps {
   initialSeconds: number;

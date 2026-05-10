@@ -1,4 +1,4 @@
-import { Week, EquipmentType, Exercise } from '../types';
+import { Week, EquipmentType, Exercise } from '@/types';
 
 export const WEEKS: Week[] = [
   {

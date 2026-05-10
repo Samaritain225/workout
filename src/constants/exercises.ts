@@ -1,4 +1,4 @@
-import { Exercise } from '../types';
+import { Exercise } from '@/types';
 
 export const EXERCISE_LIBRARY: Exercise[] = [
   // ABS
@@ -39,6 +39,110 @@ export const EXERCISE_LIBRARY: Exercise[] = [
       fr: "Mets-toi en position de pompe mais repose-toi sur tes coudes. Rends ton corps aussi raide et droit qu'une planche en bois ! Ne laisse pas tes hanches s'affaisser ou monter en l'air. Reste figé comme une statue !"
     },
     videoUrl: 'https://www.youtube.com/watch?v=pSHjTRCQxIw',
+    equipment: ['none'],
+  },
+  {
+    id: 'reverse_crunches',
+    name: 'Reverse Crunches',
+    tag: 'abs',
+    reps: 15,
+    unit: 'reps',
+    instructions: {
+      en: "Lie on your back and lift your legs up in the air. Use your tummy muscles to roll your hips up off the floor and bring your knees close to your face, then roll back down slowly!",
+      fr: "Allonge-toi sur le dos et lève tes jambes en l'air. Utilise les muscles de ton ventre pour décoller tes hanches du sol et ramener tes genoux vers ton visage, puis redescends doucement !"
+    },
+    videoUrl: 'https://www.youtube.com/watch?v=hyv14e2QDqA',
+    equipment: ['none'],
+  },
+  {
+    id: 'bicycle_crunches',
+    name: 'Bicycle Crunches',
+    tag: 'abs',
+    reps: 20,
+    unit: 'reps',
+    instructions: {
+      en: "Lie on your back and pretend you are riding a tiny bicycle in the air! Try to touch your left elbow to your right knee, then switch and touch your right elbow to your left knee. Keep pedaling!",
+      fr: "Allonge-toi sur le dos et fais semblant de pédaler sur un tout petit vélo dans l'air ! Essaie de toucher ton coude gauche avec ton genou droit, puis change et touche ton coude droit avec ton genou gauche. Continue de pédaler !"
+    },
+    videoUrl: 'https://www.youtube.com/watch?v=9FGilxCbdz8',
+    equipment: ['none'],
+  },
+  {
+    id: 'side_plank_left',
+    name: 'Side Plank (Left)',
+    tag: 'abs',
+    reps: 30,
+    unit: 'sec',
+    instructions: {
+      en: "Lie on your left side and prop yourself up on your left elbow. Lift your hips so your body is straight like a slide! Hold it tight and don't let your hips touch the ground.",
+      fr: "Allonge-toi sur le côté gauche et appuie-toi sur ton coude gauche. Soulève tes hanches pour que ton corps soit droit comme un toboggan ! Tiens bon et ne laisse pas tes hanches toucher le sol."
+    },
+    videoUrl: 'https://www.youtube.com/watch?v=NXr4Fwkuq6U',
+    equipment: ['none'],
+  },
+  {
+    id: 'side_plank_right',
+    name: 'Side Plank (Right)',
+    tag: 'abs',
+    reps: 30,
+    unit: 'sec',
+    instructions: {
+      en: "Lie on your right side and prop yourself up on your right elbow. Lift your hips up high! Imagine there is a tiny fire under your hip that you are trying to stay away from!",
+      fr: "Allonge-toi sur le côté droit et appuie-toi sur ton coude droit. Soulève tes hanches bien haut ! Imagine qu'il y a un petit feu sous ta hanche et que tu essaies de t'en éloigner !"
+    },
+    videoUrl: 'https://www.youtube.com/watch?v=NXr4Fwkuq6U',
+    equipment: ['none'],
+  },
+  {
+    id: 'mountain_climbers',
+    name: 'Mountain Climbers',
+    tag: 'abs',
+    reps: 30,
+    unit: 'reps',
+    instructions: {
+      en: "Get into a push-up position. Now run as fast as you can while staying in place! Pull your knees up to your chest one after the other like you are climbing a very steep mountain!",
+      fr: "Mets-toi en position de pompe. Maintenant, cours aussi vite que possible tout en restant sur place ! Ramène tes genoux vers ta poitrine l'un après l'autre comme si tu grimpais une montagne très raide !"
+    },
+    videoUrl: 'https://www.youtube.com/watch?v=nmwgirgXLYM',
+    equipment: ['none'],
+  },
+  {
+    id: 'hollow_hold',
+    name: 'Hollow Body Hold',
+    tag: 'abs',
+    reps: 20,
+    unit: 'sec',
+    instructions: {
+      en: "Lie on your back and lift your arms and legs just a little bit off the floor. Make your body look like a banana! Push your lower back hard into the ground and freeze like an ice statue.",
+      fr: "Allonge-toi sur le dos et soulève tes bras et tes jambes juste un peu au-dessus du sol. Fais en sorte que ton corps ressemble à une banane ! Pousse fort le bas de ton dos contre le sol et reste figé comme une statue de glace."
+    },
+    videoUrl: 'https://www.youtube.com/watch?v=LlV9AnT7hXo',
+    equipment: ['none'],
+  },
+  {
+    id: 'russian_twists',
+    name: 'Russian Twists',
+    tag: 'abs',
+    reps: 20,
+    unit: 'reps',
+    instructions: {
+      en: "Sit on the floor, lean back a little, and lift your feet up. Now twist your whole upper body to the left and touch the floor, then twist to the right and touch the floor. Like you're looking for something you lost on both sides!",
+      fr: "Assieds-toi au sol, penche-toi un peu en arrière et lève les pieds. Maintenant, tourne tout le haut de ton corps vers la gauche et touche le sol, puis tourne vers la droite et touche le sol. Comme si tu cherchais quelque chose que tu as perdu des deux côtés !"
+    },
+    videoUrl: 'https://www.youtube.com/watch?v=wkD8rjk6EEI',
+    equipment: ['none'],
+  },
+  {
+    id: 'dead_bug',
+    name: 'Dead Bug',
+    tag: 'abs',
+    reps: 12,
+    unit: 'reps',
+    instructions: {
+      en: "Lie on your back with your arms and legs up in the air like a bug that flipped over. Slowly lower your right arm and left leg at the same time, then bring them back and switch sides. Don't let your back arch!",
+      fr: "Allonge-toi sur le dos avec les bras et les jambes en l'air comme un insecte qui s'est retourné. Abaisse lentement ton bras droit et ta jambe gauche en même temps, puis ramène-les et change de côté. Ne laisse pas ton dos se cambrer !"
+    },
+    videoUrl: 'https://www.youtube.com/watch?v=g_BYB0R-4Ws',
     equipment: ['none'],
   },
   // UPPER
@@ -105,7 +209,7 @@ export const EXERCISE_LIBRARY: Exercise[] = [
       en: "Lie flat on your back like you're sleeping. Hold your dumbbells and push them straight up to the sky until your arms are locked, then bring them back down slowly like a slow-motion movie.",
       fr: "Allonge-toi sur le dos comme si tu dormais. Prends tes haltères et pousse-les tout droit vers le ciel jusqu'à ce que tes bras soient tendus, puis redescends-les doucement comme dans un film au ralenti."
     },
-    thumbnail: require('../assets/images/exercises/chest_press.png'),
+    thumbnail: require('@/assets/images/exercises/chest_press.png'),
     equipment: ['dumbbells'],
   },
   {
@@ -118,7 +222,7 @@ export const EXERCISE_LIBRARY: Exercise[] = [
       en: "Hold one dumbbell vertically with both hands right against your chest, like you are hugging a giant heavy cup of hot chocolate! Now, squat down on your invisible chair and stand back up.",
       fr: "Tiens un haltère à la verticale avec tes deux mains contre ta poitrine, comme si tu serrais une grosse tasse lourde de chocolat chaud ! Maintenant, fais ton squat sur ta chaise invisible et relève-toi."
     },
-    thumbnail: require('../assets/images/exercises/goblet_squat.png'),
+    thumbnail: require('@/assets/images/exercises/goblet_squat.png'),
     equipment: ['dumbbells'],
   },
   {
@@ -131,7 +235,7 @@ export const EXERCISE_LIBRARY: Exercise[] = [
       en: "Hold a dumbbell in each hand like you are carrying two heavy suitcases. Take a giant step forward, bend both knees down, and then push hard to stand back up!",
       fr: "Tiens un haltère dans chaque main comme si tu portais deux valises lourdes. Fais un pas de géant en avant, plie les deux genoux vers le bas, puis pousse fort pour te relever !"
     },
-    thumbnail: require('../assets/images/exercises/lunges.png'),
+    thumbnail: require('@/assets/images/exercises/lunges.png'),
     equipment: ['dumbbells'],
   },
   {
@@ -144,7 +248,7 @@ export const EXERCISE_LIBRARY: Exercise[] = [
       en: "Bend over and put one hand and one knee on a bench so your back is flat like a table. With your free hand, pull the dumbbell straight up to your belly button like you are starting a lawnmower!",
       fr: "Penche-toi et pose une main et un genou sur un banc pour que ton dos soit plat comme une table. Avec ta main libre, tire l'haltère vers ton nombril comme si tu démarrais une tondeuse à gazon !"
     },
-    thumbnail: require('../assets/images/exercises/rows.png'),
+    thumbnail: require('@/assets/images/exercises/rows.png'),
     equipment: ['dumbbells'],
   },
   {
@@ -157,7 +261,7 @@ export const EXERCISE_LIBRARY: Exercise[] = [
       en: "Lie on your back, bend your knees, and put your feet flat on the floor. Now, push your hips up high to the sky to make a bridge with your body! Squeeze your bum super hard at the top!",
       fr: "Allonge-toi sur le dos, plie les genoux et mets tes pieds à plat sur le sol. Maintenant, pousse tes hanches très haut vers le ciel pour faire un pont avec ton corps ! Serre les fesses super fort en haut !"
     },
-    thumbnail: require('../assets/images/exercises/glute_bridges.png'),
+    thumbnail: require('@/assets/images/exercises/glute_bridges.png'),
     equipment: ['none'],
   },
   {
@@ -170,7 +274,7 @@ export const EXERCISE_LIBRARY: Exercise[] = [
       en: "Lie on your back and lift your legs up in the air. Use your tummy muscles to roll your hips up off the floor and bring your knees close to your face, then roll back down slowly!",
       fr: "Allonge-toi sur le dos et lève tes jambes en l'air. Utilise les muscles de ton ventre pour décoller tes hanches du sol et ramener tes genoux vers ton visage, puis redescends doucement !"
     },
-    thumbnail: require('../assets/images/exercises/reverse_crunches.png'),
+    thumbnail: require('@/assets/images/exercises/reverse_crunches.png'),
     equipment: ['none'],
   },
 ];

@@ -3,13 +3,16 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "start": "APP_VARIANT=development expo start",
+    "android": "APP_VARIANT=development expo run:android",
+    "android:prod": "APP_VARIANT=production expo run:android",
+    "ios": "APP_VARIANT=development expo run:ios",
+    "ios:prod": "APP_VARIANT=production expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
+    "clsx": "^2.1.1",
     "expo": "~55.0.0",
     "expo-constants": "~55.0.16",
     "expo-haptics": "~55.0.14",
@@ -27,15 +30,19 @@
     "react-native-screens": "~4.23.0",
     "react-native-svg": "15.15.3",
     "react-native-worklets": "0.7.4",
+    "tailwind-merge": "^3.6.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@types/react": "^19.1.1",
     "babel-preset-expo": "~55.0.21",
+    "nativewind": "^4.2.3",
+    "tailwindcss": "^3.4.17",
     "typescript": "^5.3.3"
   },
   "overrides": {
-    "react-native-worklets": "0.7.4"
+    "react-native-worklets": "0.7.4",
+    "lightningcss": "1.30.1"
   },
   "private": true
 }

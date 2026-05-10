@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useWorkoutStore } from '../../store/useWorkoutStore';
-import { ExerciseRow } from '../../components/ExerciseRow';
-import { WeekBanner } from '../../components/WeekBanner';
-import { getProgramForEquipment } from '../../constants/program';
-import { ExercisePicker } from '../../components/ExercisePicker';
-import { ExerciseDetailsModal } from '../../components/ExerciseDetailsModal';
-import { StreakCelebration } from '../../components/StreakCelebration';
-import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
-import { EXERCISE_LIBRARY } from '../../constants/exercises';
-import { SessionType, ExerciseTag, Exercise } from '../../types';
-import { t } from '../../constants/translations';
-import { useTheme } from '../../hooks/useTheme';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { ExerciseRow } from '@/components/ExerciseRow';
+import { WeekBanner } from '@/components/WeekBanner';
+import { getProgramForEquipment } from '@/constants/program';
+import { ExercisePicker } from '@/components/ExercisePicker';
+import { ExerciseDetailsModal } from '@/components/ExerciseDetailsModal';
+import { StreakCelebration } from '@/components/StreakCelebration';
+import Animated, { 
+  useSharedValue, 
+  useAnimatedStyle, 
+  withRepeat, 
+  withSequence, 
+  withTiming,
+  FadeInDown,
+} from 'react-native-reanimated';
+import { EXERCISE_LIBRARY } from '@/constants/exercises';
+import { SessionType, ExerciseTag, Exercise } from '@/types';
+import { t } from '@/constants/translations';
+import { useTheme } from '@/hooks/useTheme';
 import { StatusBar } from 'expo-status-bar';
 
 export default function TodayScreen() {
@@ -169,10 +169,23 @@ export default function TodayScreen() {
     if (streakAfter > streakBefore) {
       setNewStreakCount(streakAfter);
       setShowStreakCelebration(true);
+    } else if (activeSession === 'night') {
+      const streakLine = streakAfter > 0
+        ? (language === 'en' ? `🔥 ${streakAfter}-day streak — keep it going!` : `🔥 Série de ${streakAfter} jours — continuez !`)
+        : '';
+      Alert.alert(
+        language === 'en' ? 'Day Complete! 🌙💪' : 'Journée Complète ! 🌙💪',
+        [
+          language === 'en' ? 'Night session done. Well done today!' : 'Séance du soir terminée. Bravo pour aujourd\'hui !',
+          streakLine,
+          language === 'en' ? 'Rest well — muscles grow while you sleep. 😴' : 'Reposez-vous bien — les muscles poussent pendant le sommeil. 😴',
+        ].filter(Boolean).join('\n\n'),
+        [{ text: language === 'en' ? 'Rest up! 😴' : 'Se reposer ! 😴' }]
+      );
     } else {
       Alert.alert(
-        activeSession === 'morning' ? (language === 'en' ? 'Morning done! 💪' : 'Matin terminé ! 💪') : (language === 'en' ? 'Night session done! 🌙' : 'Séance du soir terminée ! 🌙'),
-        activeSession === 'morning' ? (language === 'en' ? 'See you tonight.' : 'À ce soir.') : (language === 'en' ? 'Rest and let your muscles rebuild.' : 'Reposez-vous et laissez vos muscles se reconstruire.'),
+        language === 'en' ? 'Morning done! 💪' : 'Matin terminé ! 💪',
+        language === 'en' ? 'See you tonight.' : 'À ce soir.',
         [{ text: 'OK' }]
       );
     }
@@ -195,29 +208,37 @@ export default function TodayScreen() {
   const allChecked = finalExercises.length > 0 && checked.size === finalExercises.length;
   const someChecked = checked.size > 0;
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.container}>
+      <View style={{ height: insets.top, backgroundColor: theme.background }} />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.dateLabel}>{currentDateFormatted}</Text>
-            <Text style={styles.greeting}>{getGreeting(language)}</Text>
-            <Text style={styles.weekLabel}>{t('week', language)} {week.id.split('-')[1]}</Text>
-          </View>
-          <View style={styles.headerRight}>
-            <TouchableOpacity 
-              onPress={() => router.push('/settings')}
-              style={styles.settingsBtn}
-            >
-              <Text style={styles.settingsIcon}>⚙️</Text>
-            </TouchableOpacity>
-            <View style={styles.statsRow}>
-              <StatChip value={streak} label={t('streak', language)} isStreak />
-              <StatChip value={`${completionRate}%`} label={t('completion', language)} />
+        <Animated.View entering={FadeInDown.duration(600).delay(100).springify()}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.dateLabel}>{getFormattedDate(language as any)}</Text>
+              <Text style={styles.greeting}>{getGreeting(language as any)}</Text>
+              <Text style={styles.weekLabel}>{t('week', language)} {week.id}</Text>
+            </View>
+            <View style={styles.headerRight}>
+              <TouchableOpacity 
+                style={styles.settingsBtn} 
+                onPress={() => router.push('/settings')}
+              >
+                <Text style={styles.settingsIcon}>⚙️</Text>
+              </TouchableOpacity>
+              <View style={styles.statsRow}>
+                <StatChip value={getStreak()} label="Streak" isStreak />
+                <StatChip value={`${getWeeklyCompletionRate()}%`} label="Done" />
+              </View>
             </View>
           </View>
-        </View>
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.duration(600).delay(200).springify()}>
+          <WeekBanner week={week} showDeloadBadge />
+        </Animated.View>
 
         {/* Session toggle */}
         <View style={styles.sessionToggle}>
@@ -237,9 +258,6 @@ export default function TodayScreen() {
             );
           })}
         </View>
-
-        {/* Week banner */}
-        <WeekBanner week={week} showDeloadBadge />
 
         {/* Exercises */}
         {sessionDone ? (
@@ -321,7 +339,7 @@ export default function TodayScreen() {
         streak={newStreakCount}
         onComplete={() => setShowStreakCelebration(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -371,8 +389,8 @@ function getGreeting(lang: string): string {
 }
 
 const createStyles = (theme: any) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: theme.background },
-  scroll: { padding: 20, paddingBottom: 40 },
+  container: { flex: 1, backgroundColor: theme.background },
+  scroll: { padding: 20, paddingBottom: 40 + 80 }, // Account for tab bar
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -491,3 +509,8 @@ const createStyles = (theme: any) => StyleSheet.create({
     fontWeight: '600',
   },
 });
+
+function getFormattedDate(lang: 'en' | 'fr') {
+  const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+  return new Date().toLocaleDateString(lang === 'en' ? 'en-US' : 'fr-FR', options);
+}

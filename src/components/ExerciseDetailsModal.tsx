@@ -10,10 +10,10 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import { Exercise } from '../types';
-import { useWorkoutStore } from '../store/useWorkoutStore';
-import { t } from '../constants/translations';
-import { useTheme } from '../hooks/useTheme';
+import { Exercise } from '@/types';
+import { useWorkoutStore } from '@/store/useWorkoutStore';
+import { t } from '@/constants/translations';
+import { useTheme } from '@/hooks/useTheme';
 
 interface Props {
   visible: boolean;
