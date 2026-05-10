@@ -10,3 +10,5 @@ jobs:
     params:
       platform: android
       profile: production
+    env:
+      APP_VARIANT: production
