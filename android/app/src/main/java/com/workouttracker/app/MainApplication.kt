@@ -1,4 +1,4 @@
-package com.workouttracker.app.dev
+package com.workouttracker.app
 
 import android.app.Application
 import android.content.res.Configuration

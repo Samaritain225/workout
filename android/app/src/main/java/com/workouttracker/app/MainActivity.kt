@@ -1,4 +1,4 @@
-package com.workouttracker.app.dev
+package com.workouttracker.app
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
