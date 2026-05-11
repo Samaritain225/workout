@@ -5,8 +5,6 @@
 const variant = process.env.APP_VARIANT || 'development';
 const IS_DEV = variant === 'development';
 
-console.log(`Building variant: ${variant} (IS_DEV: ${IS_DEV})`);
-
 const name = IS_DEV ? 'Workout (Dev)' : 'Workout';
 const bundleId = IS_DEV ? 'com.workouttracker.app.dev' : 'com.workouttracker.app';
 
